@@ -432,7 +432,61 @@ def radio_stations():
             ("bootliquor", "SomaFM · Boot Liquor (americana)"),
             ("sonicuniverse", "SomaFM · Sonic Universe (jazz)"),
             ("beatblender", "SomaFM · Beat Blender (deep house)")]
-    return [Track(f"https://ice1.somafm.com/{sid}-128-mp3", name) for sid, name in soma]
+    tracks = [Track(f"https://ice1.somafm.com/{sid}-128-mp3", name) for sid, name in soma]
+    for pool, sid, name in BBC_STATIONS:
+        tracks.append(Track(f"http://as-hls-ww-live.akamaized.net/pool_{pool}/live/ww/{sid}/{sid}.isml/"
+                            f"{sid}-audio%3d128000.norewind.m3u8", f"BBC · {name}"))
+    return tracks
+
+
+# BBC HLS streams (worldwide edition, 128k AAC). The pool number is per station;
+# the BBC changes these occasionally — override via ~/.config/nightjar/stations.m3u.
+BBC_STATIONS = [
+    ("01505109", "bbc_radio_one", "Radio 1"),
+    ("62063831", "bbc_radio_one_dance", "Radio 1 Dance"),
+    ("11351741", "bbc_radio_one_anthems", "Radio 1 Anthems"),
+    ("92079267", "bbc_1xtra", "1Xtra"),
+    ("74208725", "bbc_radio_two", "Radio 2"),
+    ("23461179", "bbc_radio_three", "Radio 3"),
+    ("30624046", "bbc_radio_three_unwind", "Radio 3 Unwind"),
+    ("55057080", "bbc_radio_fourfm", "Radio 4"),
+    ("26173715", "bbc_radio_four_extra", "Radio 4 Extra"),
+    ("89021708", "bbc_radio_five_live", "Radio 5 Live"),
+    ("81827798", "bbc_6music", "6 Music"),
+    ("22108647", "bbc_asian_network", "Asian Network"),
+    ("87948813", "bbc_world_service", "World Service"),
+    ("43322914", "bbc_radio_scotland_fm", "Radio Scotland"),
+    ("97517794", "bbc_radio_wales_fm", "Radio Wales"),
+    ("24792333", "bbc_radio_cymru", "Radio Cymru"),
+    ("31244774", "bbc_radio_ulster", "Radio Ulster"),
+    ("98137350", "bbc_london", "Radio London"),
+]
+BBC_SID_RE = re.compile(r"/live/(?:ww|uk)/(bbc_[a-z0-9_]+)/")
+
+
+def bbc_now_playing(sid):
+    """Current track (music stations) or programme (speech) from the BBC's public RMS API."""
+    hdr = {"User-Agent": f"{APP}/{VERSION}"}
+    base = "https://rms.api.bbc.co.uk/v2"
+    try:
+        req = urllib.request.Request(f"{base}/services/{sid}/segments/latest?experience=domestic&offset=0&limit=1",
+                                     headers=hdr)
+        with urllib.request.urlopen(req, timeout=8) as r:
+            for s in json.load(r).get("data", []):
+                if s.get("offset", {}).get("now_playing"):
+                    t = s.get("titles", {})
+                    return " — ".join(p for p in (t.get("primary"), t.get("secondary")) if p) or None
+    except Exception:
+        pass
+    req = urllib.request.Request(f"{base}/broadcasts/poll/{sid}", headers=hdr)
+    with urllib.request.urlopen(req, timeout=8) as r:
+        data = json.load(r).get("data", [])
+    now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    for b in data:
+        if b.get("start", "") <= now < b.get("end", "9"):
+            t = b.get("titles", {})
+            return " · ".join(p for p in (t.get("primary"), t.get("secondary")) if p) or None
+    return None
 
 
 def probe(t):
@@ -698,9 +752,10 @@ class Engine:
                 if tr is not last_track:
                     last_track, next_poll = tr, time.monotonic() + 1.5
                 if time.monotonic() >= next_poll and not self.paused:
-                    next_poll = time.monotonic() + 15
+                    bbc = BBC_SID_RE.search(tr.src)
+                    next_poll = time.monotonic() + (30 if bbc else 15)
                     try:
-                        title = icy_now_playing(tr.src)
+                        title = bbc_now_playing(bbc.group(1)) if bbc else icy_now_playing(tr.src)
                         if title and self.track is tr:
                             self.stream_title = title
                     except Exception:

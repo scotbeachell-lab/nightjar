@@ -70,8 +70,15 @@ terminal's own background.
 
 Visualizers: bars, mirror, led, dots (braille), scope, fire, vu.
 
-Settings are saved to `~/.config/nightjar/config.json`. Put your own radio list in
-`~/.config/nightjar/stations.m3u` (use `#EXTINF:-1,Name` lines for names).
+## Radio
+
+The Radio tab (`tab`) has 14 SomaFM stations and 18 BBC stations: Radio 1 to 6 Music,
+1Xtra, Asian Network, World Service, and the nations and London stations. It shows the song
+or programme on now, from ICY metadata for SomaFM and from the BBC's public schedule API
+for the BBC. To use your own list instead, put it in `~/.config/nightjar/stations.m3u`
+(use `#EXTINF:-1,Name` lines for names).
+
+Settings are saved to `~/.config/nightjar/config.json`.
 
 ## License
 
