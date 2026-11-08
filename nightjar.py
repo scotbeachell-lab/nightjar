@@ -1318,7 +1318,7 @@ class App:
                 S.put(4, y, trunc(title, w - 6), th.fg, bold=True)
                 S.put(4, y + 1, trunc(sub, w - 6), th.accent2)
         py = y + (1 if compact else 2)
-        state = "▶" if tr and not e.paused else "‖" if tr else "■"
+        state = "▶" if tr and not e.paused else "❚" if tr else "■"
         pos = e.position
         dur = tr.duration if tr else None
         left = f"{state} {fmt_time(pos if tr else None)} "
@@ -1353,9 +1353,9 @@ class App:
         x = S.put(x, sy, f"[{self.eq_name}]", th.accent2)
         x = S.put(x, sy, "   VIZ ", th.dim)
         x = S.put(x, sy, self.viz, th.fg)
-        x = S.put(x, sy, "   ⤨ ", th.dim)
+        x = S.put(x, sy, "   ⇄ ", th.dim)
         x = S.put(x, sy, "shuffle" if self.shuffle else "in order", th.accent if self.shuffle else th.fg)
-        x = S.put(x, sy, "   ⟳ ", th.dim)
+        x = S.put(x, sy, "   ↻ ", th.dim)
         x = S.put(x, sy, {"off": "no repeat", "all": "repeat all", "one": "repeat one"}[self.repeat],
                   th.accent if self.repeat != "off" else th.fg)
         if self.queue:
@@ -1407,7 +1407,7 @@ class App:
             is_play = t is playing and self.tab == self.play_tab
             qpos = next((k for k, q in enumerate(self.queue) if q is t), None)
             if is_play:
-                mark, mcol = ("▶" if not self.engine.paused else "‖"), th.accent
+                mark, mcol = ("▶" if not self.engine.paused else "❚"), th.accent
             elif qpos is not None:
                 mark, mcol = str(qpos + 1) if qpos < 9 else "+", th.accent2
             else:

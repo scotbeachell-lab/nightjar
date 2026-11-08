@@ -3,6 +3,8 @@
 A terminal audio player: live FFT visualizers, a 10-band EQ, internet radio, gapless
 playback, and themes, including any **oh-my-posh** theme.
 
+![nightjar playing SomaFM Groove Salad with the jandedobbeleer oh-my-posh theme](docs/screenshot.png)
+
 ```sh
 ./nightjar.py ~/Music            # folders, files, .m3u/.pls, or stream URLs
 ./nightjar.py --fetch-posh-themes  # grab the official oh-my-posh theme pack (~125)
