@@ -5,14 +5,41 @@ playback, and themes, including any **oh-my-posh** theme.
 
 ![nightjar playing SomaFM Groove Salad with the jandedobbeleer oh-my-posh theme](docs/screenshot.png)
 
-```sh
-./nightjar.py ~/Music            # folders, files, .m3u/.pls, or stream URLs
-./nightjar.py --fetch-posh-themes  # grab the official oh-my-posh theme pack (~125)
-./nightjar.py --posh ~/.config/oh-my-posh/mytheme.omp.json
-./nightjar.py --list-themes
-```
+## Install
 
-Requires: Python 3.11+, numpy, ffmpeg/ffprobe, and one of pw-cat / pacat / paplay / aplay.
+Linux only. Audio goes out through PipeWire, PulseAudio or ALSA.
+
+1. Install the dependencies: Python 3.11+, numpy and ffmpeg.
+
+   ```sh
+   sudo pacman -S python-numpy ffmpeg                  # Arch
+   sudo apt install python3-numpy ffmpeg pipewire-bin  # Debian / Ubuntu
+   sudo dnf install python3-numpy ffmpeg-free          # Fedora
+   ```
+
+2. Download the script onto your PATH:
+
+   ```sh
+   mkdir -p ~/.local/bin
+   curl -fL https://github.com/scotbeachell-lab/nightjar/releases/latest/download/nightjar.py \
+     -o ~/.local/bin/nightjar && chmod +x ~/.local/bin/nightjar
+   ```
+
+3. Optionally, fetch the oh-my-posh themes, then play:
+
+   ```sh
+   nightjar --fetch-posh-themes
+   nightjar ~/Music
+   ```
+
+## Usage
+
+```sh
+nightjar ~/Music              # folders, files, .m3u/.pls, or stream URLs
+nightjar --fetch-posh-themes  # grab the official oh-my-posh theme pack (~125)
+nightjar --posh ~/.config/oh-my-posh/mytheme.omp.json
+nightjar --list-themes
+```
 
 ## oh-my-posh themes
 
