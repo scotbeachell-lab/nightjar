@@ -41,3 +41,7 @@ Visualizers: bars, mirror, led, dots (braille), scope, fire, vu.
 
 Settings are saved to `~/.config/nightjar/config.json`. Put your own radio list in
 `~/.config/nightjar/stations.m3u` (use `#EXTINF:-1,Name` lines for names).
+
+## License
+
+MIT. See [LICENSE](LICENSE).
