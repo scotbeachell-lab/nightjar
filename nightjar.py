@@ -36,7 +36,7 @@ from pathlib import Path
 import numpy as np
 
 APP = "nightjar"
-VERSION = "0.1.0"
+VERSION = "0.2.0"
 RATE = 48000
 BLOCK = 2048          # frames per DSP block
 SUB = 512             # frames per write to the output pipe
