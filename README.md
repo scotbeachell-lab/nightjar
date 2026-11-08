@@ -3,7 +3,7 @@
 A terminal audio player: live FFT visualizers, a 10-band EQ, internet radio, gapless
 playback, and themes, including any **oh-my-posh** theme.
 
-![nightjar playing SomaFM Groove Salad with the jandedobbeleer oh-my-posh theme](docs/screenshot.png)
+![nightjar demo: cycling visualizers, picking an oh-my-posh theme, editing the EQ, fullscreen mode](docs/demo.gif)
 
 ## Install
 
@@ -49,6 +49,8 @@ Themes are discovered from `~/.config/nightjar/posh-themes`, `$POSH_THEMES_PATH`
 inline `<#hex>` tags); YAML is scanned line by line. The segment colors become the
 player palette: the first vivid segment color is the accent, and the distinct segment
 colors, sorted dark to bright, make up the visualizer gradient.
+
+![nightjar playing SomaFM Groove Salad with the jandedobbeleer oh-my-posh theme](docs/screenshot.png)
 
 Press `T` for the theme picker (type to filter, live preview) and `B` to use your
 terminal's own background.
